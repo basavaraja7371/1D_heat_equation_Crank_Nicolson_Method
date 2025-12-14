@@ -77,3 +77,21 @@ def boundary_vector(r, g0_n, g0_np1, gL_n, gL_np1, nx):
     b[-1] = (r / 2) * (gL_n + gL_np1)
 
     return b
+
+
+def crank_nicolson_step(u_n, LHS, RHS, b):
+    """
+    One Crank-Nicolson step to calculate u[n+1] from u[n]
+
+    Args:
+        u_n (np.array): u[n] at time t[n]
+        LHS (np.ndarray): LHS matrix (I - A)
+        RHS (np.ndarray): RHS matrix (I + A)
+        b (np.array): boundary value vector
+
+    Returns:
+        u_np1 (np.array): u[n+1] at time t[n+1]
+    """
+    rhs = RHS @ u_n + b
+    u_np1 = np.linalg.solve(LHS, rhs)
+    return u_np1
