@@ -25,3 +25,32 @@ def d2_dirichlet(nx, dx):
     ).toarray()
 
     return d2mat / dx**2
+
+
+def crank_nicolson_matrices(nx, dx, dt, alpha):
+    """
+    Create matrices involved in Crank-Nicolson method. (I-A) on the LHS,
+    (I+A) on the RHS and vector r.
+
+    Args:
+        nx (integer): number of grid points
+        dx (float): grid spacing
+        dt (float): time step length
+        alpha (float): thermal conductivity
+
+    Returns:
+        RHS (np.ndarray): (I - A) matrix
+        LHS (np.ndarray): (I + A) matrix
+        r (np.array): alpha * dt / dx**2
+    """
+    r = dt * alpha / dx**2
+
+    D2 = d2_dirichlet(nx, dx)
+    A = (r / 2) * D2
+
+    Ix = np.eye(nx - 2)
+
+    LHS = Ix - A
+    RHS = Ix + A
+
+    return LHS, RHS, r
