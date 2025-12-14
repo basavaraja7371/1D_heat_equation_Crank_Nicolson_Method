@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.sparse import diags
+import matplotlib.pyplot as plt
 
 
 def d2_dirichlet(nx, dx):
@@ -41,9 +42,9 @@ def crank_nicolson_matrices(nx, dx, dt, alpha):
     Returns:
         RHS (np.ndarray): (I - A) matrix
         LHS (np.ndarray): (I + A) matrix
-        r (np.array): alpha * dt / dx**2
+        r (np.array): alpha * dt
     """
-    r = dt * alpha / dx**2
+    r = dt * alpha
 
     D2 = d2_dirichlet(nx, dx)
     A = (r / 2) * D2
@@ -121,7 +122,10 @@ def solve_heat_CN(f, g0, gL, L, T, nx, nt, alpha):
     t = np.linspace(0, T, nt + 1)
 
     # initial condition (interior solution)
-    u = f(x)[1:-1]  # ignored the end points
+    u = np.zeros(nx)
+    u[0] = g0(T)  # at x=0
+    u[-1] = gL(T)  # at x=L
+    u[1:-1] = f(x)[1:-1]  # interior points
 
     LHS, RHS, r = crank_nicolson_matrices(nx, dx, dt, alpha)
 
@@ -129,6 +133,48 @@ def solve_heat_CN(f, g0, gL, L, T, nx, nt, alpha):
         # define boundary condition
         b = boundary_vector(r, g0(t[n]), g0(t[n + 1]), gL(t[n]), gL(t[n + 1]), nx)
 
-        u = crank_nicolson_step(u, LHS, RHS, b)
+        u[1:-1] = crank_nicolson_step(u[1:-1], LHS, RHS, b)
 
-    return u
+    return x, u
+
+
+# Let's solve heat equation
+# The exact solution is
+
+
+def exact_solution(x, t, alpha):
+    return np.exp(-(np.pi**2) * alpha * t) * np.sin(np.pi * x)
+
+
+# Initial condition
+def f(x):
+    return np.sin(np.pi * x)
+
+
+# Left boundary
+def g0(t):
+    return 0.0
+
+
+# Right boundary
+def gL(t):
+    return 0.0
+
+
+x, u_final = solve_heat_CN(f=f, g0=g0, gL=gL, L=1.0, T=5, nx=50, nt=500, alpha=0.1)
+
+
+u_exact = exact_solution(x, t=5, alpha=0.1)
+
+fig, ax = plt.subplots(figsize=(9, 5))
+ax.set_xlabel(r"Length of the rod, $x$", fontsize=18)
+ax.set_ylabel(r"Temperature, $T$", fontsize=18)
+
+
+ax.plot(x, u_final, linewidth=2, label="Crank-Nicolson")
+ax.plot(x, u_exact, "r^", markersize=7, alpha=0.7, label="Exact")
+
+ax.legend(fontsize=12)
+plt.tight_layout()
+plt.savefig("heat_equation_CN.jpg")
+plt.show()
