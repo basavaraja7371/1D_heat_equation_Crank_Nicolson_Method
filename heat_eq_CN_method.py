@@ -74,8 +74,8 @@ def boundary_vector(r, g0_n, g0_np1, gL_n, gL_np1, nx):
         b (np.array): boundary vector
     """
     b = np.zeros(nx - 2)
-    b[0] = (r / 2) * (g0_n + g0_np1)
-    b[-1] = (r / 2) * (gL_n + gL_np1)
+    b[0] += (r / 2) * (g0_n + g0_np1)
+    b[-1] += (r / 2) * (gL_n + gL_np1)
 
     return b
 
@@ -137,8 +137,6 @@ def solve_heat_CN(f, g0, gL, L, T, nx, nt, alpha):
 
     return x, u
 
-
-print(__name__)
 
 if __name__ == "__main__":
     # Let's solve heat equation
