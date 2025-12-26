@@ -60,8 +60,7 @@ The Crank–Nicolson method is obtained by applying:
 - Averaging the spatial operator between time levels $n$ and $n+1$
 
 $$
-\frac{u_i^{n+1} - u_i^n}{\Delta t}
-=
+\frac{u_i^{n+1} - u_i^n}{\Delta t}=
 \frac{1}{2} \left( F_i^{n+1} + F_i^n \right)
 $$
 
