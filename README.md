@@ -60,9 +60,7 @@ The Crank–Nicolson method is obtained by applying:
 - Averaging the spatial operator between time levels $n$ and $n+1$
 
 $$
-\frac{u_i^{n+1} - u_i^n}{\Delta t}
-=
-\frac{1}{2} \left( F_i^{n+1} + F_i^n \right)
+\frac{u_i^{n+1} - u_i^n}{\Delta t}=\frac{1}{2} \left( F_i^{n+1} + F_i^n \right)
 $$
 
 For the heat equation:
@@ -78,12 +76,9 @@ $$
 Substituting the spatial discretization:
 
 $$
-\frac{u_i^{n+1} - u_i^n}{\Delta t}
-=
-\frac{\alpha}{2}
+\frac{u_i^{n+1} - u_i^n}{\Delta t}=\frac{\alpha}{2}
 \left[
-\frac{u_{i-1}^{n+1} - 2u_i^{n+1} + u_{i+1}^{n+1}}{\Delta x^2}
-+
+\frac{u_{i-1}^{n+1} - 2u_i^{n+1} + u_{i+1}^{n+1}}{\Delta x^2}+
 \frac{u_{i-1}^{n} - 2u_i^{n} + u_{i+1}^{n}}{\Delta x^2}
 \right]
 $$
@@ -97,16 +92,11 @@ $$
 Rewriting:
 
 $$
-u_i^{n+1}
--
-\frac{r}{2}
+u_i^{n+1}-\frac{r}{2}
 \left(
 u_{i-1}^{n+1} - 2u_i^{n+1} + u_{i+1}^{n+1}
-\right)
-=
-u_i^n
-+
-\frac{r}{2}
+\right)=
+u_i^n+\frac{r}{2}
 \left(
 u_{i-1}^{n} - 2u_i^{n} + u_{i+1}^{n}
 \right)
@@ -187,9 +177,5 @@ $$
 Final update formula:
 
 $$
-u^{n+1}
-=
-(I - A)^{-1} (I + A) u^n
-+
-(I - A)^{-1} b
+u^{n+1}=(I - A)^{-1} (I + A) u^n+(I - A)^{-1} b
 $$
